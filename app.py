@@ -1,12 +1,12 @@
-# encoding:utf-8
-# !/usr/bin/env python
+# # encoding:utf-8
+# # !/usr/bin/env python
 import psutil
 import time
 from threading import Lock
 from flask import Flask, render_template
 import Adafruit_DHT
 
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO,Sockets
 
 
 sensor = Adafruit_DHT.DHT11
@@ -29,11 +29,10 @@ def background_thread():
         count += 1
         t = time.strftime('%H:%M:%S', time.localtime())
         # 获取系统时间（只取分:秒）
-        cpus = psutil.cpu_percent(interval=None, percpu=True)
         humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
         # 获取系统cpu使用率 non-blocking
         socketio.emit('server_response',
-                      {'data': [t, humidity], 'count': count},
+                      {'data': [t, humidity,temperature], 'count': count},
                       namespace='/test')
         # 注意：这里不需要客户端连接的上下文，默认 broadcast = True
 
@@ -51,5 +50,18 @@ def test_connect():
             thread = socketio.start_background_task(target=background_thread)
 
 
+@sockets.route('/echo')
+def echo_socket(ws):
+    while not ws.closed:
+        message = ws.receive()
+        ws.send("come from web server: " + str(message))
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True,host='0.0.0.0')
+# import pymysql
+# # 打开数据库连接
+# db = pymysql.connect("192.168.122.102", "root", "qq111111", "device")
+
+# # 使用 cursor() 方法创建一个游标对象 cursor
+# cursor = db.cursor()
