@@ -7,6 +7,7 @@ from flask import Flask, render_template
 import Adafruit_DHT
 
 from flask_socketio import SocketIO
+from flask_sockets import Sockets
 
 
 sensor = Adafruit_DHT.DHT11
@@ -15,7 +16,7 @@ gpio = 18
 async_mode = None
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-
+sockets = Sockets(app)
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
