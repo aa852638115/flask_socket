@@ -6,7 +6,7 @@ from threading import Lock
 from flask import Flask, render_template
 import Adafruit_DHT
 
-from flask_socketio import SocketIO,Sockets
+from flask_socketio import SocketIO
 
 
 sensor = Adafruit_DHT.DHT11
