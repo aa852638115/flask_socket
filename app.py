@@ -1,6 +1,6 @@
 # # encoding:utf-8
 # # !/usr/bin/env python
-import psutil
+
 import time
 from threading import Lock
 from flask import Flask, render_template
@@ -59,6 +59,7 @@ def echo_socket(ws):
 
 if __name__ == '__main__':
     socketio.run(app, debug=True,host='0.0.0.0')
+
 # import pymysql
 # # 打开数据库连接
 # db = pymysql.connect("192.168.122.102", "root", "qq111111", "device")
